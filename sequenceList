@@ -1,0 +1,114 @@
+//顺序表(数据结构作业)
+#include<iostream>
+#include<cstring>
+#define MaxLength 20
+using namespace std;
+struct SqList
+{
+	char name[10]; 
+	int data[MaxLength];
+	int len = 0;
+};
+void Init(SqList &sqlist, const char *name)
+{
+	int n, data;
+	strcpy(sqlist.name, name);
+	cout<<"输入初始顺序表里值的个数:";
+	cin>>n;
+	cout<<"输入顺序表的值:";
+	for(int i=0; i<n; i++)
+	{
+		cin>>data;
+		sqlist.data[i] = data;
+		sqlist.len++;
+	}
+}
+void Insert(SqList &sqlist, int index, int elem)
+{
+	for(int i = sqlist.len; i > index; i--)
+		sqlist.data[i] = sqlist.data[i-1];
+	sqlist.data[index] = elem;
+	sqlist.len++;
+}
+void Delete(SqList &sqlist,int index)
+{
+	for(int i = index; i < sqlist.len - 1; i++)
+		sqlist.data[i] = sqlist.data[i+1];
+	sqlist.len--;
+}
+void Merge(SqList sqlist1, SqList sqlist2, SqList &sqlist3)
+{
+	int index1 = 0;
+	int index2 = 0;
+	int index3 = 0;
+	while(index1 < sqlist1.len && index2 < sqlist2.len)
+	{
+		if(sqlist1.data[index1] <= sqlist2.data[index2])
+			sqlist3.data[index3++] = sqlist1.data[index1++];
+		else
+			sqlist3.data[index3++] = sqlist2.data[index2++];
+	}
+	for(int i = index1; i<sqlist1.len; i++)
+		sqlist3.data[index3++] = sqlist1.data[index1++];
+	for(int i = index2; i<sqlist2.len; i++)
+		sqlist3.data[index3++] = sqlist2.data[index2++];	
+	sqlist3.len = index3;
+}
+void Out(SqList sqlist)
+{
+	cout<<sqlist.name<<":";
+	for(int i = 0; i < sqlist.len; i++)
+	{
+//		cout.width(2);
+		if(i == 0)
+			cout<<sqlist.data[i];
+		else
+			cout<<" "<<sqlist.data[i];
+	}
+	cout<<endl;
+}
+int main()
+{
+	SqList sqlist1, sqlist2, sqlist3;
+	Init(sqlist1, "sqlist1");
+	cout<<"初始化完成:"<<endl;
+	Out(sqlist1);
+	
+	Init(sqlist2, "sqlist2");
+	cout<<"初始化完成:"<<endl;
+	Out(sqlist2);
+
+	//sqlist3的初始化	
+	sqlist3.len=0;
+	strcpy(sqlist3.name,"sqlist3");
+
+	//插入操作 
+	int a, b;
+	cout<<"对sqlist1表进行插入操作:"<<endl;
+	cout<<"请按照a,b的格式输入,程序将实现在a的位置上插入b:";
+	cin>>a>>b;
+	Insert(sqlist1, a, b);
+	cout<<"本次插入操作后:"<<endl;
+	Out(sqlist1);
+	cout<<endl;
+	
+	//删除操作
+	int x;
+	cout<<"对sqlist2进行删除操作:"<<endl;
+	cout<<"请输出要删除元素的位置:";
+	cin>>x;
+	Delete(sqlist2, x);	
+	cout<<"本次删除操作后:";
+	Out(sqlist2);
+	cout<<endl;
+	
+	//合并操作
+	int t;
+	cout<<"合并操作(默认两个顺序表是非减序列),输入1后开始合并操作:";
+	cin>>t;
+	Out(sqlist1);
+	Out(sqlist2);
+	Merge(sqlist1, sqlist2, sqlist3);
+	Out(sqlist3); 
+	return 0;
+}
