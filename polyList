@@ -87,7 +87,13 @@ void poly_add(polynode *La, polynode *Lb, polynode *&Lc)//相加
     Lb = Lb->next;
     while(La != NULL || Lb != NULL)
     {
-        if(La->expn == Lb->expn)
+        if(La->expn < Lb->expn)
+        {
+            MyCreate(Lc->next, La->coef, La->expn, NULL);
+            Lc = Lc->next;
+            La = La->next;
+        }
+        else if(La->expn == Lb->expn)
         {
             if(La->coef + Lb->coef ==0)
             {
@@ -99,12 +105,6 @@ void poly_add(polynode *La, polynode *Lb, polynode *&Lc)//相加
             Lc = Lc->next;
             La = La->next;
             Lb = Lb->next;
-        }
-        else if(La->expn < Lb->expn)
-        {
-            MyCreate(Lc->next, La->coef, La->expn, NULL);
-            Lc = Lc->next;
-            La = La->next;
         }
         else
         {
