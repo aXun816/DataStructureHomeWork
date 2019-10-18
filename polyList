@@ -1,0 +1,207 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+struct polynode
+{
+    float coef;
+    int expn;
+    polynode *next;
+};
+
+void poly_create(polynode *&L)//创建链表
+{
+    int n, coef, expn;
+    cin >> n;
+    polynode *head = new polynode;
+    polynode *preNode = head;
+    head->coef = 0;
+    head->expn = 0;
+    head->next = NULL;
+    while(n--)
+    {
+        cin >> coef >> expn;
+        polynode *myPolynode = new polynode;
+        myPolynode->coef = coef;
+        myPolynode->expn = expn;
+        myPolynode->next = NULL;
+        preNode->next = myPolynode;
+        preNode = myPolynode;
+    }
+    L = head;
+}
+void poly_display(polynode *L)//显示链表内容
+{
+    char c = '+';
+    polynode *head = L->next;
+    while(L->next != NULL)
+    {
+        L = L->next;
+        if(L != head)
+        {
+            c = L->coef > 0 ? '+' : '-';
+            cout << c;
+            cout << abs(L->coef);
+        }
+        else
+        {
+            cout << L->coef;
+        }
+        cout << "x" << "(" << L->expn << ")";
+    }
+    cout << endl;
+}
+void poly_add(polynode *La, polynode *Lb, polynode *&Lc)//相加
+{
+
+    Lc = new polynode;
+    Lc->coef = 0;
+    Lc->expn = 0;
+    Lc->next = NULL;
+    polynode *head = Lc;
+    La = La->next;
+    Lb = Lb->next;
+    while(La != NULL || Lb != NULL)
+    {
+        if(La->expn == Lb->expn)
+        {
+            if(La->coef + Lb->coef ==0)
+            {
+                La = La->next;
+                Lb = Lb->next;
+                continue;
+            }
+            Lc->next = new polynode;
+            Lc = Lc->next;
+            Lc->coef = La->coef + Lb->coef;
+            Lc->expn = La->expn;
+            Lc->next = NULL;
+            La = La->next;
+            Lb = Lb->next;
+        }
+        else if(La->expn < Lb->expn)
+        {
+            Lc->next = new polynode;
+            Lc = Lc->next;
+            Lc->coef = La->coef;
+            Lc->expn = La->expn;
+            Lc->next = NULL;
+            La = La->next;
+        }
+        else
+        {
+            Lc->next = new polynode;
+            Lc = Lc->next;
+            Lc->coef = Lb->coef;
+            Lc->expn = Lb->expn;
+            Lc->next = NULL;
+            Lb = Lb->next;
+        }
+    }
+    while(La != NULL)
+    {
+        Lc->next = new polynode;
+        Lc = Lc->next;
+        Lc->coef = La->coef;
+        Lc->expn = La->expn;
+        Lc->next = NULL;
+        La = La->next;
+    }
+    while(Lb != NULL)
+    {
+        Lc->next = new polynode;
+        Lc = Lc->next;
+        Lc->coef = Lb->coef;
+        Lc->expn = Lb->expn;
+        Lc->next = NULL;
+        Lb = Lb->next;
+    }
+    Lc = head;
+}
+void poly_subtract(polynode *La, polynode *Lb, polynode *&Ld)//相减
+{
+
+    Ld = new polynode;
+    Ld->coef = 0;
+    Ld->expn = 0;
+    Ld->next = NULL;
+    polynode *head = Ld;
+    La = La->next;
+    Lb = Lb->next;
+    while(La != NULL || Lb != NULL)
+    {
+        if(La->expn < Lb->expn)
+        {
+            Ld->next = new polynode;
+            Ld = Ld->next;
+            Ld->coef = La->coef;
+            Ld->expn = La->expn;
+            Ld->next = NULL;
+            La = La->next;
+        }
+        else if(La->expn == Lb->expn)
+        {
+            if(La->coef == Lb->coef)
+            {
+                La = La->next;
+                Lb = Lb->next;
+                continue;
+            }
+            Ld->next = new polynode;
+            Ld = Ld->next;
+            Ld->coef = La->coef - Lb->coef;//负
+            Ld->expn = La->expn;
+            Ld->next = NULL;
+            La = La->next;
+            Lb = Lb->next;
+        }
+        else
+        {
+            Ld->next = new polynode;
+            Ld = Ld->next;
+            Ld->coef = -Lb->coef;//负
+            Ld->expn = Lb->expn;
+            Ld->next = NULL;
+            Lb = Lb->next;
+        }
+
+    }
+    while(La != NULL)
+    {
+        Ld->next = new polynode;
+        Ld = Ld->next;
+        Ld->coef = La->coef;
+        Ld->expn = La->expn;
+        Ld->next = NULL;
+        La = La->next;
+    }
+    while(Lb != NULL)
+    {
+        Ld->next = new polynode;
+        Ld = Ld->next;
+        Ld->coef = -Lb->coef;
+        Ld->expn = Lb->expn;
+        Ld->next = NULL;
+        Lb = Lb->next;
+    }
+    Ld = head;
+}
+
+int main()
+{
+    polynode *La, *Lb, *Lc, *Ld;
+
+    poly_create(La);//创建La
+    poly_display(La);
+
+    poly_create(Lb);//创建Lb
+    poly_display(Lb);
+
+    poly_add(La, Lb, Lc);//La + Lb = Lc
+    poly_display(Lc);
+
+    poly_subtract(La, Lb, Ld);//La - Lb = Ld
+    poly_display(Ld);
+
+    return 0;
+}
