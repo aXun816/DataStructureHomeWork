@@ -1,3 +1,17 @@
+//数据结构作业-多项式
+
+//3
+//2 3
+//3 4
+//5 7
+//5
+//2 1
+//3 3
+//-3 4
+//4 6
+//5 7
+
+
 #include <iostream>
 #include <cmath>
 using namespace std;
@@ -30,6 +44,15 @@ void poly_create(polynode *&L)//创建链表
     }
     L = head;
 }
+
+void MyCreate(polynode *& Le, float coef, int expn,polynode *next)
+{
+    Le = new polynode;
+    Le->coef = coef;
+    Le->expn = expn;
+    Le->next = next;
+}
+
 void poly_display(polynode *L)//显示链表内容
 {
     char c = '+';
@@ -51,6 +74,7 @@ void poly_display(polynode *L)//显示链表内容
     }
     cout << endl;
 }
+
 void poly_add(polynode *La, polynode *Lb, polynode *&Lc)//相加
 {
 
@@ -71,53 +95,39 @@ void poly_add(polynode *La, polynode *Lb, polynode *&Lc)//相加
                 Lb = Lb->next;
                 continue;
             }
-            Lc->next = new polynode;
+            MyCreate(Lc->next, La->coef + Lb->coef, La->expn, NULL);
             Lc = Lc->next;
-            Lc->coef = La->coef + Lb->coef;
-            Lc->expn = La->expn;
-            Lc->next = NULL;
             La = La->next;
             Lb = Lb->next;
         }
         else if(La->expn < Lb->expn)
         {
-            Lc->next = new polynode;
+            MyCreate(Lc->next, La->coef, La->expn, NULL);
             Lc = Lc->next;
-            Lc->coef = La->coef;
-            Lc->expn = La->expn;
-            Lc->next = NULL;
             La = La->next;
         }
         else
         {
-            Lc->next = new polynode;
+            MyCreate(Lc->next, Lb->coef, Lb->expn, NULL);
             Lc = Lc->next;
-            Lc->coef = Lb->coef;
-            Lc->expn = Lb->expn;
-            Lc->next = NULL;
             Lb = Lb->next;
         }
     }
     while(La != NULL)
     {
-        Lc->next = new polynode;
+        MyCreate(Lc->next, La->coef, La->expn, NULL);
         Lc = Lc->next;
-        Lc->coef = La->coef;
-        Lc->expn = La->expn;
-        Lc->next = NULL;
         La = La->next;
     }
     while(Lb != NULL)
     {
-        Lc->next = new polynode;
+        MyCreate(Lc->next, Lb->coef, Lb->expn, NULL);
         Lc = Lc->next;
-        Lc->coef = Lb->coef;
-        Lc->expn = Lb->expn;
-        Lc->next = NULL;
         Lb = Lb->next;
     }
     Lc = head;
 }
+
 void poly_subtract(polynode *La, polynode *Lb, polynode *&Ld)//相减
 {
 
@@ -132,11 +142,8 @@ void poly_subtract(polynode *La, polynode *Lb, polynode *&Ld)//相减
     {
         if(La->expn < Lb->expn)
         {
-            Ld->next = new polynode;
+            MyCreate(Ld->next, La->coef, La->expn, NULL);
             Ld = Ld->next;
-            Ld->coef = La->coef;
-            Ld->expn = La->expn;
-            Ld->next = NULL;
             La = La->next;
         }
         else if(La->expn == Lb->expn)
@@ -147,41 +154,29 @@ void poly_subtract(polynode *La, polynode *Lb, polynode *&Ld)//相减
                 Lb = Lb->next;
                 continue;
             }
-            Ld->next = new polynode;
+            MyCreate(Ld->next, La->coef - Lb->coef, La->expn, NULL);
             Ld = Ld->next;
-            Ld->coef = La->coef - Lb->coef;//负
-            Ld->expn = La->expn;
-            Ld->next = NULL;
             La = La->next;
             Lb = Lb->next;
         }
         else
         {
-            Ld->next = new polynode;
+            MyCreate(Ld->next, -Lb->coef, Lb->expn, NULL);
             Ld = Ld->next;
-            Ld->coef = -Lb->coef;//负
-            Ld->expn = Lb->expn;
-            Ld->next = NULL;
             Lb = Lb->next;
         }
 
     }
     while(La != NULL)
     {
-        Ld->next = new polynode;
+        MyCreate(Ld->next, La->coef, La->expn, NULL);
         Ld = Ld->next;
-        Ld->coef = La->coef;
-        Ld->expn = La->expn;
-        Ld->next = NULL;
         La = La->next;
     }
     while(Lb != NULL)
     {
-        Ld->next = new polynode;
+        MyCreate(Ld->next, -Lb->coef, Lb->expn, NULL);
         Ld = Ld->next;
-        Ld->coef = -Lb->coef;
-        Ld->expn = Lb->expn;
-        Ld->next = NULL;
         Lb = Lb->next;
     }
     Ld = head;
