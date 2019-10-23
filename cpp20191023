@@ -1,0 +1,58 @@
+#include <iostream>
+using namespace std;
+
+class String {
+public:
+    String();
+    ~String();
+    String(const char* str);
+    friend ostream& operator<<(ostream &os, String str);
+    friend String operator+(const String &s1, const String &s2);
+private:
+    char *s;
+    int len = 0;
+};
+String::String(){
+    s = NULL;
+}
+String::String(const char* str) {
+    int i;
+    for(i = 0; str[i] != '\0'; i++);
+    s = new char(i + 1);
+    len = i;
+    for(i = 0; i < len ;i++)
+        s[i] = str[i];
+    s[len] = str[i];
+}
+String::~String() {
+    delete s;
+}
+ostream& operator<<(ostream &os, String str){
+    os << str.s << endl;
+    return os;
+}
+String operator+(const String &s1, const String &s2){
+    String s3;
+    int i;
+    s3 = new char[s3.len +1];
+    s3.len = s1.len + s2.len;
+    for(i = 0; i < s1.len; i++)
+        s3.s[i] = s1.s[i];
+    for(i = 0; i < s2.len; i++)
+        s3.s[i + s1.len] = s2.s[i];
+    s3.s[s3.len] = s2.s[i];
+    return s3;
+}
+int main() {
+    String s1 = "hello";
+    String s2 = "world";
+    cout << s1;
+    cout << s2;
+    String s3;
+    s3 = s1 + " " + s2;
+    cout << s3 << endl;       // hello world
+//    s3[0] = 'H';
+//    cout << s3 << endl;       // Hello world
+
+    return 0;
+}
