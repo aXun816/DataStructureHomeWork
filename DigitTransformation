@@ -1,0 +1,131 @@
+//数制转换
+
+#include <iostream>
+
+using namespace std;
+
+
+struct Node {
+    int data;
+    Node *next;
+};
+
+struct Stack {
+    Node *base;
+    Node *top;
+    int size;
+};
+
+char c[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+void Init(Stack *s);//初始化栈
+void Push(Stack *s, int data);//入栈
+void Pop(Stack *s);//出栈
+bool IsEmpty(Stack *s);//判断栈是否为空
+void Top(Stack *s);//获取栈顶元素
+void Out(Stack *s);//遍历栈元素，从栈顶到栈底依次输出
+void Digit10ToDigitX(int n);//十进制转换
+void Display();//交互界面
+
+void Init(Stack *s) {
+    s->base = new Node();
+    if (s->base == NULL) {
+        cout << "内存分配失败" << endl;
+        exit(1);
+    }
+    s->top = s->base;
+    s->size = 0;
+    s->base->next = NULL;
+}
+
+void Push(Stack *s, int data) {
+    Node *p = new Node();
+    p->data = data;
+    p->next = s->top;
+    s->top = p;
+    s->size++;
+}
+
+void Pop(Stack *s) {
+    Node *temp = s->top;
+    s->top = s->top->next;
+    delete temp;
+    s->size--;
+}
+
+bool IsEmpty(Stack *s) {
+    if (s->base == s->top)//栈为空，返回true
+        return true;
+    return false;
+}
+
+void Top(Stack *s) {
+    if (s->base == s->top)
+        cout << "栈为空，无法获取栈顶元素" << endl;
+    else
+        cout << c[s->top->data];
+}
+
+void Out(Stack *s) {
+    Node *top = s->top;
+    Node *base = s->base;
+    if (base == top)
+        cout << "栈为空，无法遍历" << endl;
+    else
+        while (base != top) {
+            cout << top->data << endl;
+            top = top->next;
+        }
+}
+
+void Digit10ToDigitX(int n) {
+    int data;
+    if (n == -1)
+        return;
+    cout << "10进制转化为" << n << "进制" << endl;
+    while (cin >> data, data != -1 && data != -2) {
+        Stack *s = new Stack();
+        s->base = NULL;
+        s->top = NULL;
+        Init(s);
+        int mod;
+        int result;
+        while (data > 0) {
+            mod = data % n;
+            data = data / n;
+            Push(s, mod);
+        }
+        if (IsEmpty(s))
+            Push(s, 0);
+        while (!IsEmpty(s)) {
+            Top(s);
+            Pop(s);
+        }
+        cout << endl;
+    }
+    if (data == -1)
+        Display();
+    if (data == -2) {
+        cout << "程序结束" << endl;
+        exit(0);
+    }
+}
+
+void Display() {
+    cout << "输入数字(2~16),实现10进制转换为输入数字的进制" << endl;
+    cout << "输入为-1时,重新选择进制" << endl;
+    cout << "输入为-2时,程序结束" << endl;
+}
+
+int main() {
+    int n;
+    int digit10;
+    Display();
+    while (cin >> n, n != -2) {
+        if (n == -1)
+            Display();
+        Digit10ToDigitX(n);
+    }
+    cout << "程序结束" << endl;
+    return 0;
+}
