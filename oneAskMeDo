@@ -1,0 +1,36 @@
+# Example 1:Fibonacci sequence
+
+
+def Fib(n):
+    if n == 1:
+        return [1]
+    elif n == 2:
+        return [1, 1]
+    fibs = [1, 1]
+    for i in range(2, n):
+        fibs.append(fibs[-1] + fibs[-2])
+    return fibs
+
+
+print(Fib(10))
+
+
+
+# Decimal to binary
+
+
+def DigitToBinary(n):
+    Arr = []
+    while (n > 0):
+        Arr.append(n % 2)
+        n = int(n / 2)
+    Arr.reverse()
+    return Arr
+
+
+# print(DigitToBinary(8))
+t = DigitToBinary(8)
+for i in range(len(t)):
+    print(t[i], end='')
+
+
