@@ -34,3 +34,56 @@ for i in range(len(t)):
     print(t[i], end='')
 
 
+
+#sklearn实现逻辑回归
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.metrics import classification_report
+from sklearn import preprocessing
+from sklearn import linear_model
+
+scale = False  # 数据是否标准化
+
+data = np.genfromtxt('C:/Users/zjx/Documents/TangBingFeng_test/梯度下降法实现逻辑回归.csv', delimiter=',')
+x_data = data[:, :-1]
+y_data = data[:, -1]
+
+
+def plot():
+    x0 = []
+    x1 = []
+    y0 = []
+    y1 = []
+
+    for i in range(len(x_data)):
+        if y_data[i] == 0:
+            x0.append(x_data[i, 0])
+            y0.append(x_data[i, 1])
+        else:
+            x1.append(x_data[i, 0])
+            y1.append(x_data[i, 1])
+
+    scatter0 = plt.scatter(x0, y0, c='b', marker='o')
+    scatter1 = plt.scatter(x1, y1, c='r', marker='x')
+    plt.legend(handles=[scatter0, scatter1], labels=['label0', 'label1'], loc='best')
+
+
+plot()
+plt.show()
+
+logistic = linear_model.LogisticRegression()
+logistic.fit(x_data, y_data)
+
+if scale == False:
+    # 画决策边界
+    plot()
+    x_test = np.array([[30], [90]])
+    # intercept表示偏置
+    # coef表示权值
+    y_test = (-logistic.intercept_ - x_test * logistic.coef_[0][0]) / logistic.coef_[0][1]
+    plt.plot(x_test, y_test, 'k')
+    plt.show()
+
+prediction = logistic.predict(x_data)
+print('预测：', classification_report(y_data, prediction))
+
