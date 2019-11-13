@@ -1,0 +1,70 @@
+//二叉树的创建+三种遍历
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+struct treeNode {
+    treeNode *leftChild;
+    treeNode *rightChild;
+    char data;
+};
+
+void CreateBT(treeNode *&bt);
+
+void PreTraverse(const treeNode *bt);//前序
+void InfixTraverse(const treeNode *bt);//中序
+void PostTraverse(const treeNode *bt);//后序
+
+void CreateBT(treeNode *&bt) {
+    char data;
+    cin >> data;
+    if (data == '#') {
+        bt = NULL;
+        return;
+    }
+    bt = new treeNode();
+    bt->data = data;
+    CreateBT(bt->leftChild);
+    CreateBT(bt->rightChild);
+}
+
+void PreTraverse(const treeNode *bt) {
+    if (bt == NULL)
+        return;
+
+    cout << bt->data;
+    PreTraverse(bt->leftChild);
+    PreTraverse(bt->rightChild);
+}
+
+void InfixTraverse(const treeNode *bt) {
+    if (bt == NULL)
+        return;
+
+    InfixTraverse(bt->leftChild);
+    cout << bt->data;
+    InfixTraverse(bt->rightChild);
+}
+
+void PostTraverse(const treeNode *bt) {
+    if (bt == NULL)
+        return;
+
+    PostTraverse(bt->leftChild);
+    PostTraverse(bt->rightChild);
+    cout << bt->data;
+}
+
+int main() {
+    treeNode *bt;
+    CreateBT(bt);
+    PreTraverse(bt);
+    cout << endl;
+    InfixTraverse(bt);
+    cout << endl;
+    PostTraverse(bt);
+    cout << endl;
+    return 0;
+}
+//ABC##DE#G##F###
