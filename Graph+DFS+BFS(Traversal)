@@ -1,0 +1,112 @@
+//数据结构作业-邻接图的创建+DFS+BFS遍历
+
+
+#include <iostream>
+#include <queue>
+#include <iomanip>
+
+#define maxsize 100
+//#define maxNum 0x3f3f3f3f
+#define maxNum 99
+using namespace std;
+struct graph {
+    int vertexNum;//顶点数
+    int edgeNum;//边数
+    int v[maxsize];//顶点表，即vis
+    int e[maxsize][maxsize];//边表，即矩阵
+};
+
+queue<int> q;
+
+void InitGraph(graph &g, const int vertexNum);//初始化
+void CreateGraph(graph &g);//创建邻接矩阵
+void DFS(graph &g, int index);//深搜
+void BFS(graph &g, int index);//广搜
+void Out(const graph g);//打印矩阵
+
+int main() {
+    graph g;
+    CreateGraph(g);
+    Out(g);
+//    DFS(g, 0);
+//    cout << endl;
+    BFS(g, 0);
+    cout << endl;
+    return 0;
+}
+
+
+void InitGraph(graph &g, const int vertexNum) {
+    g.vertexNum = 0;
+    g.edgeNum = 0;
+    for (int i = 0; i < vertexNum; ++i) {
+        for (int j = 0; j <= i; ++j) {
+            if (i == j)
+                g.e[i][j] = 0;
+            else
+                g.e[i][j] = g.e[j][i] = maxNum;
+        }
+    }
+
+    for (int i = 0; i < vertexNum; ++i)
+        g.v[i] = 0;
+}
+
+
+void CreateGraph(graph &g) {
+    int vertexNum;
+    int edgeNum;
+    int e1, e2;
+    int weight;
+    cout << "请输入顶点个数和边条数" << endl;
+    cin >> vertexNum >> edgeNum;
+
+    InitGraph(g, vertexNum);
+    while (edgeNum--) {
+        cin >> e1 >> e2 >> weight;
+        if (g.e[e1][e2] == weight)//排除重复输入的干扰
+            continue;
+        g.e[e1][e2] = g.e[e2][e1] = weight;
+        g.edgeNum++;
+    }
+    g.vertexNum = vertexNum;
+}
+
+void DFS(graph &g, int index) {
+    if (g.v[index] == 0) {
+        cout << index << " ";
+        g.v[index] = 1;
+        for (int i = 0; i < g.vertexNum; ++i) {
+            if (g.v[i] == 0 && g.e[index][i] > 0 && g.e[index][i] < maxNum) {
+                DFS(g, i);
+            }
+        }
+    }
+}
+
+void BFS(graph &g, int index) {
+    while (!q.empty())
+        q.pop();
+    q.push(index);
+    g.v[index] = 1;
+    while (!q.empty()) {
+        int t = q.front();
+        cout << t << " ";
+        q.pop();
+        for (int i = 0; i < g.vertexNum; ++i) {
+            if (g.v[i] == 0 && g.e[t][i] > 0 && g.e[t][i] < maxNum) {
+                q.push(i);
+                g.v[i] = 1;
+            }
+        }
+    }
+}
+
+void Out(const graph g) {
+    for (int i = 0; i < g.vertexNum; ++i) {
+        for (int j = 0; j < g.vertexNum; ++j) {
+            cout << setw(2) << setfill('0') << g.e[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
