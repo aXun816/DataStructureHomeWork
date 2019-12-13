@@ -100,7 +100,5 @@ int main(){
 		}
 		cout << i << "  路径长度:" << dis[i] << endl;
 	}
-//	for(int i = 1; i < MAX; i++)
-//		cout << i << ":" << path[i] <<endl;
 	return 0;
 }
