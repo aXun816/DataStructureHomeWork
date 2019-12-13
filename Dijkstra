@@ -1,8 +1,11 @@
 #include<iostream>
+#include<stack>
 #include<iomanip>
 #define MAX 6
 #define inf 32767
 using namespace std;
+
+stack<int> s;
 
 int dis[MAX];//单源最短路径 
 int vis[MAX];//是否访问过 
@@ -76,10 +79,28 @@ void DIJK(int v){
 	
 }
 int main(){
+	int start = 0;//这里选0做源点 
 	Out();
-	DIJK(0);
-	for(int i = 0; i < MAX; i++){
-		cout << i << ":" << dis[i] << endl;
+	DIJK(start);
+	cout << "输出最短路径" << endl;
+	while(!s.empty())
+		s.pop();
+	for(int i = 1; i < MAX; i++){
+		cout << start << "->";
+		if(dis[i] < inf){
+			int t = path[i];
+			while(t != start){
+				s.push(t);
+				t = path[t];
+			}
+			while(!s.empty())	{
+				cout << s.top() << "->";
+				s.pop();
+			}
+		}
+		cout << i << "  路径长度:" << dis[i] << endl;
 	}
+//	for(int i = 1; i < MAX; i++)
+//		cout << i << ":" << path[i] <<endl;
 	return 0;
 }
