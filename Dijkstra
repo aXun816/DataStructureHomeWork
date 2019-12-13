@@ -1,0 +1,85 @@
+#include<iostream>
+#include<iomanip>
+#define MAX 6
+#define inf 32767
+using namespace std;
+
+int dis[MAX];//单源最短路径 
+int vis[MAX];//是否访问过 
+int path[MAX];//前驱 
+int A[MAX][MAX] = {{0,  inf,10, inf,30, 100},
+				   {inf,0,  5,  inf,inf,inf},
+				   {inf,inf,0,  50, inf,inf},
+				   {inf,inf,inf,0,  inf,10},
+				   {inf,inf,inf,20, 0,  60},
+				   {inf,inf,inf,inf,inf,0}};;//邻接矩阵 
+
+					// ∞  ∞   10 ∞   30 100
+					// ∞  ∞    5 ∞  ∞  ∞
+					// ∞  ∞  ∞   50 ∞  ∞
+					// ∞  ∞  ∞  ∞  ∞   10
+					// ∞  ∞  ∞   20 ∞   60
+					// ∞  ∞  ∞  ∞  ∞  ∞
+
+
+//输出这个邻接矩阵 
+void Out(){
+	for(int i = 0; i < MAX; i++){
+		for(int j = 0; j < MAX; j++){
+			if(A[i][j] == inf){
+				cout << " ∞ ";
+			}	
+			else{
+				cout << setw(4);
+				cout << A[i][j];
+			}
+		}
+		cout << endl;
+	}
+}
+
+//迪杰斯特拉 
+void DIJK(int v){
+	
+	int n = MAX;
+	for(int i = 1; i <= n; i++){
+		vis[i] = 0;
+		dis[i] = A[v][i];
+		path[i] = v;
+	}
+	
+	dis[v] = 0;
+	vis[v] = 1;
+
+	for(int i = 1; i < n; i++){
+		
+		int minDistance = inf;
+		int u = v;
+		
+		//找出离源点最近的且未被标记的点		
+		for(int j = 0; j < n; j++){
+			if(!vis[j] && minDistance > dis[j]){
+				u = j;
+				minDistance = dis[j];
+			}
+		}
+		vis[u] = 1;
+		//更新dis[],更新path[] 
+		for(int j = 0; j < n; j++){
+			if(!vis[j] && dis[u] + A[u][j] < dis[j]){
+				dis[j] = dis[u] + A[u][j];
+				path[j] = u;
+			}
+		}
+	}
+	
+	
+}
+int main(){
+	Out();
+	DIJK(0);
+	for(int i = 0; i < MAX; i++){
+		cout << i << ":" << dis[i] << endl;
+	}
+	return 0;
+}
