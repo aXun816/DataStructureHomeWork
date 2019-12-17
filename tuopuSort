@@ -1,61 +1,128 @@
+//拓扑排序(邻接矩阵实现)
+/*
+ * 测试数据
+6 8
+0 1
+0 2
+0 3
+2 1
+2 4
+3 4
+5 3
+5 4
+ */
 #include<iostream>
+#include<iomanip>
+
 #define MAX 100
-#define INF 999999
+#define INF 999999//表示无穷大
 using namespace std;
 
-int A[MAX][MAX];
-int vis[MAX];
-int d[MAX];//入度 
-int main()
-{
-	int n, m;
-	int cnt = 0;
-	cin >> n >> m; 
-	for(int i = 0; i < n; i++){
-		for(int j = 0;j < n; j++){
-			if(i == j)
-				A[i][j] = 0;
-			else
-				A[i][j] = INF;
-		}
-	}
-	
-	for(int i = 0; i < n; i++){
-		vis[i] = 0;
-		d[i] = 0;
-	}
-	int a,b;
-	for(int i = 0; i < m; i++){
-		cin >> a >> b;
-		A[a][b] = 1;
-		d[b]++;
-	}
-	
-	
-	int i,j;
-	for(i = 0; i < n; i++){
-		for(j = 0;j < n; j++){
-			if(d[j] == 0 && vis[j] == 0){
-				vis[j] = 1;
-				cout << j << " ";	
-				cnt++;
-				break;
-			}
-		}
-		if(j < n){
-			for(int k = 0; k < n; k++){
-				if(A[j][k] == 1){
-					A[j][k] = INF;
-					d[k]--;
-				}
-			}
-			}
-		
-	}
-	cout << endl;
-	if(cnt >= n)
-		cout << "存在回路" <<endl;
-	else
-		cout << "不存在回路" <<endl;
-	return 0;
+//邻接矩阵结构体
+struct Graph {
+    int edge[MAX][MAX];
+    int edgeNum;
+    int vexNum;
+    int vis[MAX];//表示访问状态
+    int d[MAX];//入度
+    int cnt;//拓扑排序过程中顶点总数，若存在回路，则cnt要等于总顶点数
+};
+
+void CreateGraph(Graph &g);//创建邻接矩阵
+void InitCraph(Graph &g);//邻接矩阵初始化
+void TpSort(Graph &g);//拓扑排序
+void Out(Graph const g);//输出邻接矩阵
+int main() {
+    Graph g;//创建邻接矩阵
+    CreateGraph(g);
+    cout << "输出邻接矩阵为" << endl;
+    Out(g);
+    cout << "\n输出拓扑排序为(若不存在拓扑序列，则输出前几个顶点)：";
+    TpSort(g);
+    return 0;
+}
+
+void CreateGraph(Graph &g) {
+    int vexNum, edgeNum;
+    cout << "请输入顶点数和边数：";
+    cin >> vexNum >> edgeNum;
+    g.vexNum = vexNum;
+    g.edgeNum = edgeNum;
+    InitCraph(g);
+
+    int start, end;
+    cout << "请输入存在路径的节点" << endl;
+    for (int i = 0; i < g.edgeNum; i++) {
+        cin >> start >> end;
+        g.edge[start][end] = 1;
+        g.d[end]++;
+    }
+}
+
+void InitCraph(Graph &g) {
+    for (int i = 0; i < g.vexNum; i++) {
+        for (int j = 0; j < g.vexNum; j++) {
+            if (i == j)
+                g.edge[i][j] = 0;
+            else
+                g.edge[i][j] = INF;
+        }
+    }
+    for (int i = 0; i < g.vexNum; i++) {
+        g.vis[i] = 0;
+        g.d[i] = 0;
+    }
+    g.cnt = 0;
+}
+
+void TpSort(Graph &g) {
+    int i, j;
+    for (i = 0; i < g.vexNum; i++) {
+        //寻找入读为0的点，输出并删除这个点以及跟这个点关联的点
+        for (j = 0; j < g.vexNum; j++) {
+            if (g.d[j] == 0 && g.vis[j] == 0) {
+                g.vis[j] = 1;
+                char c;
+                c = 'A' + j;
+                cout << c << " ";
+                g.cnt++;
+                break;
+            }
+        }
+        if (j < g.vexNum) {
+            for (int k = 0; k < g.vexNum; k++) {
+                if (g.edge[j][k] == 1) {
+                    g.edge[j][k] = INF;
+                    g.d[k]--;
+                }
+            }
+        }
+    }
+    cout << endl;
+    if (g.cnt >= g.vexNum)
+        cout << "存在拓扑排序" << endl;
+    else
+        cout << "不存在拓扑排序" << endl;
+    return;
+}
+
+
+void Out(Graph const g) {
+    cout << "   ";
+    for (int i = 0; i < g.vexNum; i++) {
+        char c = 'A' + i;
+        cout << c << "  ";
+    }
+    cout << endl;
+    for (int i = 0; i < g.vexNum; ++i) {
+        char c = 'A' + i;
+        cout << c << "  ";
+        for (int j = 0; j < g.vexNum; ++j) {
+            if (g.edge[i][j] == INF)
+                cout << "∞  ";
+            else
+                cout << setw(2) << std::left << g.edge[i][j] << " ";
+        }
+        cout << endl;
+    }
 }
