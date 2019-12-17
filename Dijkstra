@@ -1,104 +1,164 @@
+//迪杰斯特拉实现单源最短路径(有向图)
+/*
+ * 测试数据
+6 8
+0 2 10
+0 4 30
+0 5 100
+1 2 5
+2 3 50
+3 5 10
+4 3 20
+4 5 60
+ */
+
 #include<iostream>
 #include<stack>
 #include<iomanip>
-#define MAX 6
+
+#define MAX 100
 #define inf 32767
 using namespace std;
 
+struct Graph {
+    int edge[MAX][MAX];
+    int edgeNum;
+    int vexNum;
+    int dis[MAX];//单源最短路径
+    int vis[MAX];//是否访问过
+    int path[MAX];//前驱
+};
 stack<int> s;
 
-int dis[MAX];//单源最短路径 
-int vis[MAX];//是否访问过 
-int path[MAX];//前驱 
-int A[MAX][MAX] = {{0,  inf,10, inf,30, 100},
-				   {inf,0,  5,  inf,inf,inf},
-				   {inf,inf,0,  50, inf,inf},
-				   {inf,inf,inf,0,  inf,10},
-				   {inf,inf,inf,20, 0,  60},
-				   {inf,inf,inf,inf,inf,0}};;//邻接矩阵 
-
-					// ∞  ∞   10 ∞   30 100
-					// ∞  ∞    5 ∞  ∞  ∞
-					// ∞  ∞  ∞   50 ∞  ∞
-					// ∞  ∞  ∞  ∞  ∞   10
-					// ∞  ∞  ∞   20 ∞   60
-					// ∞  ∞  ∞  ∞  ∞  ∞
+void CreateGraph(Graph &g);//构造邻接矩阵
+void InitGraph(Graph &g);//初始化邻接矩阵
+void Out(Graph const g);//输出这个邻接矩阵
+void DIJK(Graph &g, int v);//迪杰斯特拉算法实现最短路径
 
 
-//输出这个邻接矩阵 
-void Out(){
-	for(int i = 0; i < MAX; i++){
-		for(int j = 0; j < MAX; j++){
-			if(A[i][j] == inf){
-				cout << " ∞ ";
-			}	
-			else{
-				cout << setw(4);
-				cout << A[i][j];
-			}
-		}
-		cout << endl;
-	}
+
+
+int main() {
+    Graph g;//创建邻接矩阵
+    int start = 0;//这里选0做源点
+    CreateGraph(g);
+    cout << "得到的邻接矩阵为：" << endl;
+    Out(g);
+    DIJK(g, start);
+    cout << "输出最短路径" << endl;
+
+    for (int i = 0; i < g.vexNum; i++) {
+        cout << start << "->";
+        if (g.dis[i] < inf) {
+            int t = g.path[i];
+            while (t != start) {
+                s.push(t);
+                t = g.path[t];
+            }
+            while (!s.empty()) {
+                cout << s.top() << "->";
+                s.pop();
+            }
+        }
+        cout << i << "  路径长度:";
+        if( g.dis[i] == inf)
+            cout << "∞" << endl;
+        else
+            cout << g.dis[i] <<endl;
+    }
+    return 0;
 }
 
-//迪杰斯特拉 
-void DIJK(int v){
-	
-	int n = MAX;
-	for(int i = 1; i <= n; i++){
-		vis[i] = 0;
-		dis[i] = A[v][i];
-		path[i] = v;
-	}
-	
-	dis[v] = 0;
-	vis[v] = 1;
-
-	for(int i = 1; i < n; i++){
-		
-		int minDistance = inf;
-		int u = v;
-		
-		//找出离源点最近的且未被标记的点		
-		for(int j = 0; j < n; j++){
-			if(!vis[j] && minDistance > dis[j]){
-				u = j;
-				minDistance = dis[j];
-			}
-		}
-		vis[u] = 1;
-		//更新dis[],更新path[] 
-		for(int j = 0; j < n; j++){
-			if(!vis[j] && dis[u] + A[u][j] < dis[j]){
-				dis[j] = dis[u] + A[u][j];
-				path[j] = u;
-			}
-		}
-	}
-	
-	
+void InitGraph(Graph &g) {
+    for (int i = 0; i < g.vexNum; ++i) {
+        for (int j = 0; j < g.vexNum; ++j) {
+            if (i == j)
+                g.edge[i][j] = 0;
+            else
+                g.edge[i][j] = inf;//inf表示无穷大
+        }
+    }
+    for (int i = 0; i < g.vexNum; ++i) {
+        g.dis[i] = inf;
+        g.vis[i] = 0;
+        g.path[i] = i;
+    }
+    while (!s.empty())
+        s.pop();
 }
-int main(){
-	int start = 0;//这里选0做源点 
-	Out();
-	DIJK(start);
-	cout << "输出最短路径" << endl;
-	while(!s.empty())
-		s.pop();
-	for(int i = 1; i < MAX; i++){
-		cout << start << "->";
-		if(dis[i] < inf){
-			int t = path[i];
-			while(t != start){
-				s.push(t);
-				t = path[t];
-			}
-			while(!s.empty())	{
-				cout << s.top() << "->";
-				s.pop();
-			}
-		}
-		cout << i << "  路径长度:" << dis[i] << endl;
-	}
-	return 0;
+
+void CreateGraph(Graph &g) {
+    int vexNum;
+    int edgeNum;
+
+    cout << "请输入顶点数和边数：";
+    cin >> vexNum >> edgeNum;;
+    g.vexNum = vexNum;
+    g.edgeNum = edgeNum;
+    InitGraph(g);//初始化邻接矩阵
+    for (int i = 0; i < edgeNum; ++i) {
+        int startVex;
+        int endVex;
+        int weight;
+        cin >> startVex >> endVex >> weight;
+        g.edge[startVex][endVex] = weight;
+        g.path[endVex] = startVex;
+    }
+}
+
+
+void DIJK(Graph &g, int v) {
+    //源点为v
+    for (int i = 1; i <= g.vexNum; i++) {
+        g.vis[i] = 0;
+        g.dis[i] = g.edge[v][i];
+        g.path[i] = v;
+    }
+
+    g.dis[v] = 0;
+    g.vis[v] = 1;
+
+    for (int i = 1; i < g.vexNum; i++) {
+
+        int minDistance = inf;
+        int u = v;
+
+        //找出离源点最近的且未被标记的点
+        for (int j = 0; j < g.vexNum; j++) {
+            if (!g.vis[j] && minDistance > g.dis[j]) {
+                u = j;
+                minDistance = g.dis[j];
+            }
+        }
+        g.vis[u] = 1;
+        //更新dis[],更新path[]
+        for (int j = 0; j < g.vexNum; j++) {
+            if (!g.vis[j] && g.dis[u] + g.edge[u][j] < g.dis[j]) {
+                g.dis[j] = g.dis[u] + g.edge[u][j];
+                g.path[j] = u;
+            }
+        }
+    }
+}
+
+void Out(Graph const g) {
+    cout <<"   ";
+    for (int i = 0; i < g.vexNum; i++){
+        char c = 'A' + i;
+        cout << c << "  ";
+    }
+    cout << endl;
+    for (int i = 0; i < g.vexNum; i++) {
+        char c = 'A' + i;
+        cout << c << "  ";
+        for (int j = 0; j < g.vexNum; j++) {
+            if (g.edge[i][j] == inf) {
+                cout << "∞  ";
+            } else {
+                cout << std::left << setw(3);
+                cout << g.edge[i][j];
+            }
+        }
+        cout << endl;
+    }
 }
