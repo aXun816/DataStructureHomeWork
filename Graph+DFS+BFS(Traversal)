@@ -76,6 +76,7 @@ void CreateGraph(graph &g) {
     cin >> vertexNum >> edgeNum;
 
     InitGraph(g, vertexNum);
+    cout << "请输入存在路径的顶点" << endl;
     while (edgeNum--) {
         cin >> e1 >> e2;
         if (g.e[e1][e2] == weight)//排除重复输入的干扰
