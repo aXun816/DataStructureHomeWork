@@ -1,4 +1,6 @@
 //二叉树的创建+三种遍历
+//测试数据ABC##DE#G##F###
+
 #include <iostream>
 #include <string>
 
@@ -10,9 +12,9 @@ struct treeNode {
     char data;
 };
 
-void CreateBT(treeNode *&bt);
+void CreateBT(treeNode *&bt);//先序创建二叉树
 
-void PreTraverse(const treeNode *bt);//前序
+void PreTraverse(const treeNode *bt);//先序
 void InfixTraverse(const treeNode *bt);//中序
 void PostTraverse(const treeNode *bt);//后序
 
@@ -59,12 +61,12 @@ void PostTraverse(const treeNode *bt) {
 int main() {
     treeNode *bt;
     CreateBT(bt);
+    cout << "先序遍历：";
     PreTraverse(bt);
-    cout << endl;
+    cout << endl << "中序遍历：";
     InfixTraverse(bt);
-    cout << endl;
+    cout << endl << "后序遍历：";
     PostTraverse(bt);
     cout << endl;
     return 0;
 }
-//ABC##DE#G##F###
