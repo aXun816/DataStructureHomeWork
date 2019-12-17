@@ -28,7 +28,7 @@ struct Graph {
     int vis[MAX];//是否访问过
     int path[MAX];//前驱
 };
-stack<int> s;
+stack<int> s;//为输出前驱path[]而创建的栈
 
 void CreateGraph(Graph &g);//构造邻接矩阵
 void InitGraph(Graph &g);//初始化邻接矩阵
