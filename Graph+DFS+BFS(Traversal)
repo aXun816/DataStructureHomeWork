@@ -1,5 +1,14 @@
-//数据结构作业-邻接图的创建+DFS+BFS遍历
-
+//邻接矩阵的创建+DFS+BFS遍历(无向图)
+/*
+ * 测试数据
+5 6
+0 3
+0 2
+0 4
+2 1
+2 4
+1 4
+ */
 
 #include <iostream>
 #include <queue>
@@ -16,20 +25,25 @@ struct graph {
     int e[maxsize][maxsize];//边表，即矩阵
 };
 
-queue<int> q;
+queue<int> q;//BFS里的队列
 
 void InitGraph(graph &g, const int vertexNum);//初始化
 void CreateGraph(graph &g);//创建邻接矩阵
-void DFS(graph &g, int index);//深搜
-void BFS(graph &g, int index);//广搜
+void DFS(graph &g, int index);//深度优先搜索
+void BFS(graph &g, int index);//广度优先搜索
 void Out(const graph g);//打印矩阵
 
 int main() {
-    graph g;
+    graph g;//创建邻接矩阵
     CreateGraph(g);
+    cout << "邻接矩阵为：" << endl;
     Out(g);
-//    DFS(g, 0);
-//    cout << endl;
+    cout << "\n深度优先遍历：";
+    DFS(g, 0);
+    cout << endl;
+    for (int i = 0; i < g.vertexNum; ++i)//重置v[],防止干扰BFS
+        g.v[i] = 0;
+    cout << "\n广度优先遍历：";
     BFS(g, 0);
     cout << endl;
     return 0;
@@ -57,13 +71,13 @@ void CreateGraph(graph &g) {
     int vertexNum;
     int edgeNum;
     int e1, e2;
-    int weight;
+    int weight = 1;//这里默认有路径时距离为1
     cout << "请输入顶点个数和边条数" << endl;
     cin >> vertexNum >> edgeNum;
 
     InitGraph(g, vertexNum);
     while (edgeNum--) {
-        cin >> e1 >> e2 >> weight;
+        cin >> e1 >> e2;
         if (g.e[e1][e2] == weight)//排除重复输入的干扰
             continue;
         g.e[e1][e2] = g.e[e2][e1] = weight;
@@ -103,9 +117,20 @@ void BFS(graph &g, int index) {
 }
 
 void Out(const graph g) {
+    cout << "   ";
+    for (int i = 0; i < g.vertexNum; i++) {
+        char c = 'A' + i;
+        cout << c << "  ";
+    }
+    cout << endl;
     for (int i = 0; i < g.vertexNum; ++i) {
+        char c = 'A' + i;
+        cout << c << "  ";
         for (int j = 0; j < g.vertexNum; ++j) {
-            cout << setw(2) << setfill('0') << g.e[i][j] << " ";
+            if (g.e[i][j] == maxNum)
+                cout << "∞  ";
+            else
+                cout << setw(2) << std::left << g.e[i][j] << " ";
         }
         cout << endl;
     }
