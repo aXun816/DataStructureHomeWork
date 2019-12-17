@@ -1,3 +1,15 @@
+//哈夫曼编码
+/*
+测试数据
+5
+A  8
+B  20
+C  30
+D  15
+E  27
+0101101110#
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
@@ -89,7 +101,7 @@ void CreateHuffmanTree(HuffmanTree &HT, int w[], char ch[], int n) {
 
 
 void Select(HuffmanTree HT, int n, int &s1, int &s2) {    //补充完整
-    int min1 = 0x3f3f3f3f;
+    int min1 = 0x3f3f3f3f;//这里将0x3f3f3f3f作为最大值
     int min2 = 0x3f3f3f3f;
     int tempMin = 0x3f3f3f3f;
     int tempS = 0;
