@@ -1,49 +1,57 @@
+//快速排序(递增)
+//测试数据 8 1 32 4 12 4 9 4 3
 #include<iostream>
-#define MAX 999
-using namespace std;
-int A[MAX];
 
-void Qsort(int a[], int l, int r){
-	int i = l;
-	int j = r;
-	int t = a[l];
-	if(i < j){
-		while(i < j){
-		while(t < a[j] && i < j){
-			j--;
-		}
-		if(i < j){
-			a[i] = a[j];
-			i++;
-		}
-		while(t > a[i] && i < j){
-			i++;
-		}
-		if(i < j){
-			a[j] = a[i];
-			j--;
-		}
-		}
-		a[i] = t;
-		Qsort(a, l, i - 1);
-		Qsort(a, i + 1, r);
-	}
-	return ;
+#define MAX 999//表示最大值
+using namespace std;
+int A[MAX];//存储数据的数组
+
+void Qsort(int a[], int l, int r) {
+    int i = l;
+    int j = r;
+    int t = a[l];
+    if (i < j) {
+        while (i < j) {
+            while (t < a[j] && i < j) {
+                j--;
+            }
+            if (i < j) {
+                a[i] = a[j];
+                i++;
+            }
+            while (t > a[i] && i < j) {
+                i++;
+            }
+            if (i < j) {
+                a[j] = a[i];
+                j--;
+            }
+        }
+        a[i] = t;
+        Qsort(a, l, i - 1);
+        Qsort(a, i + 1, r);
+    }
+    return;
 }
-int main(){
-	int n;
-	int data;
-	cin >> n;
-	for(int i = 0; i < n; i++){
-		cin >> A[i];
-	}
-	for(int i = 0; i < n; i++){
-		cout << A[i] << " ";
-	}
-	cout << endl;
-	Qsort(A, 0, n - 1);
-	for(int i = 0; i < n; i++){
-		cout << A[i] << " ";
-	}
-	return 0;
+
+int main() {
+    int n;
+    int data;
+    cout << "请输入要排序的数字的个数：";
+    cin >> n;
+    cout << "请输入要排序的数字" << endl;
+    for (int i = 0; i < n; i++) {
+        cin >> A[i];
+    }
+    cout << "排序前的数组:";
+    for (int i = 0; i < n; i++) {
+        cout << A[i] << " ";
+    }
+
+    Qsort(A, 0, n - 1);
+    cout << "\n排序后的数组:";
+    for (int i = 0; i < n; i++) {
+        cout << A[i] << " ";
+    }
+    return 0;
 }
